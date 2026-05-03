@@ -1,18 +1,12 @@
-﻿![ManTarang Banner](https://capsule-render.vercel.app/api?type=waving&color=0:2D1B69,50:7C3AED,100:C9A227&height=220&section=header&text=ManTarang&fontSize=80&fontColor=ffffff&fontAlignY=38&desc=AI-Powered%20Music%20Emotion%20Recognition%20%26%20Recommendation&descAlignY=60&descSize=16&animation=fadeIn)
-
-<div align="center">
+﻿![ManTarang Banner](https://capsule-render.vercel.app/api?type=waving&color=0:2D1B69,50:7C3AED,100:C9A227&height=220&section=header&text=ManTarang&fontSize=80&fontColor=ffffff&fontAlignY=38&desc=AI-Powered%20Music%20Emotion%20Recognition&descAlignY=60&descSize=16&animation=fadeIn)
 
 [![Typing SVG](https://readme-typing-svg.demolab.com?font=Inter&weight=700&size=20&pause=1000&color=C9A227&center=true&vCenter=true&width=650&lines=Music+Emotion+Recognition+%7C+MER+Project;4-Agent+Collaborative+AI+Architecture;Planner+%E2%86%92+GenreMood+%E2%86%92+Discovery+%E2%86%92+Judge;Explainable+Per-Track+Confidence+Metrics;Deployed+Free+on+HuggingFace+Spaces)](https://git.io/typing-svg)
 
-<br/>
-
 [![Live Demo](https://img.shields.io/badge/Live_Demo-HuggingFace_Spaces-FF6B00?style=for-the-badge)](https://huggingface.co/spaces/ashu-17/mantarang)
-[![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
-[![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![Docker](https://img.shields.io/badge/Docker-Deployed-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://huggingface.co/spaces/ashu-17/mantarang)
-
-</div>
+[![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge)](https://python.org)
+[![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge)](https://react.dev)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=for-the-badge)](https://fastapi.tiangolo.com)
+[![Docker](https://img.shields.io/badge/Docker-Deployed-2496ED?style=for-the-badge)](https://huggingface.co/spaces/ashu-17/mantarang)
 
 ---
 
@@ -38,16 +32,12 @@
 
 > Each agent contributes its expertise. The Planner leads, two specialists generate candidates, and the Judge delivers the final verdict.
 
-<div align="center">
-
 | Query | Planner decides | Agents activated | Output |
 |-------|----------------|-----------------|--------|
 | `"songs like Radiohead"` | Similarity strategy | Discovery + GenreMood | Genre-DNA matched tracks |
 | `"chill lo-fi for studying"` | Context strategy | GenreMood | lo-fi / chillhop ranked list |
 | `"dark indie rock"` | Genre strategy | GenreMood + Discovery | Confidence-scored results |
 | `"energetic hip hop"` | Mood strategy | GenreMood | High-energy ranked tracks |
-
-</div>
 
 ---
 
@@ -109,7 +99,7 @@ sequenceDiagram
 
     Note over J: Merge all candidates<br/>Score with RankingEngine<br/>Optimise diversity<br/>Generate explanations
 
-    J-->>User: Final ranked recommendations<br/>with metrics + confidence
+    J-->>User: Final ranked recommendations<br/>with metrics and confidence
 ```
 
 ---
@@ -140,7 +130,7 @@ flowchart TD
 flowchart TD
     MA["MoodAnalyzer\nDetect mood from query\nhappy / sad / energetic\nchill / romantic / focused"]
     GP["GenreProcessor\nMatch genre tags\nExpand via alias maps\nFilter by genre overlap"]
-    TG["TagGenerator\nGenerate enhanced tags\nCombine genre + mood signals\nContext-aware tag boost"]
+    TG["TagGenerator\nGenerate enhanced tags\nCombine genre and mood signals\nContext-aware tag boost"]
     UCG["UnifiedCandidateGenerator\nGenerate candidates\nby genre and mood\nfrom dataset"]
     QS["QualityScorer\nScore genre fit\nScore mood alignment\nScore popularity balance"]
 
@@ -196,13 +186,13 @@ flowchart TD
 
 ```mermaid
 flowchart LR
-    CSV1["📄 track_data_final.csv\n8,778 tracks\ntrack + artist + genres\npopularity + followers"]
-    CSV2["📄 spotify_data clean.csv\nGenre enrichment source"]
+    CSV1["track_data_final.csv\n8778 tracks\ntrack + artist + genres\npopularity + followers"]
+    CSV2["spotify_data clean.csv\nGenre enrichment source"]
 
     PARSE["Parse Genres\nast.literal_eval\nfallback string split"]
     MERGE["Build Artist-Genre Map\nMerge both sources\n61% genre coverage"]
     ENRICH["Enrich Missing Genres\nBack-fill from merged map"]
-    INDEX["Index Columns\nartist_lower / track_lower\ngenres_lower"]
+    INDEX["Index Columns\nartist_lower\ntrack_lower\ngenres_lower"]
     RAM["Shared Agent Dataset\nLoaded once at startup\nShared across all agents"]
 
     CSV1 --> PARSE
@@ -215,7 +205,7 @@ flowchart LR
 
 ---
 
-## 📐 Metric & Confidence Formulas
+## 📐 Metric and Confidence Formulas
 
 ```mermaid
 graph LR
@@ -233,18 +223,14 @@ graph LR
     AS --> CF
 ```
 
-<div align="center">
-
 | Metric | Formula | Calculated By |
 |--------|---------|--------------|
-| Genre Match | `genre_overlap(track, target) × 100` | GenreMood + Discovery Agents |
-| Popularity Fit | `popularity / 100 × 100` | Judge Agent |
-| Artist Score | `min(100, log₁₀(followers)/8 × 100)` | Judge Agent |
-| Overall Relevance | `GM×0.45 + PF×0.30 + AS×0.25` | Judge Agent |
-| Track Confidence | `(GM×0.50 + AS×0.30 + PF×0.20) / 100` | Judge Agent |
-| System Confidence | `avg×75 + strategy_premium + diversity_bonus` | Judge Agent |
-
-</div>
+| Genre Match | `genre_overlap(track, target) x 100` | GenreMood + Discovery Agents |
+| Popularity Fit | `popularity / 100 x 100` | Judge Agent |
+| Artist Score | `min(100, log10(followers)/8 x 100)` | Judge Agent |
+| Overall Relevance | `GM x 0.45 + PF x 0.30 + AS x 0.25` | Judge Agent |
+| Track Confidence | `(GM x 0.50 + AS x 0.30 + PF x 0.20) / 100` | Judge Agent |
+| System Confidence | `avg x 75 + strategy_premium + diversity_bonus` | Judge Agent |
 
 ---
 
@@ -274,8 +260,6 @@ graph TD
 
 ## 🛠 Tech Stack
 
-<div align="center">
-
 | Layer | Technology | Purpose |
 |-------|-----------|---------|
 | 🤖 Agents | Python 3.11 — 4 agent classes | Planner, GenreMood, Discovery, Judge |
@@ -286,8 +270,6 @@ graph TD
 | 🌌 Canvas | HTML5 Canvas API | 200-star animated starfield |
 | 🐳 Container | Docker multi-stage | Node build then Python serve |
 | ☁️ Deploy | HuggingFace Spaces | CPU Basic, free, port 7860 |
-
-</div>
 
 ---
 
@@ -359,25 +341,11 @@ ManTarang/
 
 ## 👥 Built By
 
-<div align="center">
-
-<table>
-<tr>
-<td align="center" width="50%">
-<h3>Ashutosh Kumar Singh</h3>
-<code>Enrollment No. 92301733016</code>
-</td>
-<td align="center" width="50%">
-<h3>Aditya Raj</h3>
-<code>Enrollment No. 92301733062</code>
-</td>
-</tr>
-</table>
-
-<br/>
+| | |
+|---|---|
+| **Ashutosh Kumar Singh** | Enrollment No. 92301733016 |
+| **Aditya Raj** | Enrollment No. 92301733062 |
 
 **Music Emotion Recognition (MER) — 2026**
-
-</div>
 
 ![footer](https://capsule-render.vercel.app/api?type=waving&color=0:C9A227,50:7C3AED,100:2D1B69&height=120&section=footer&animation=fadeIn)
