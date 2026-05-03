@@ -6,7 +6,7 @@
 | | |
 |---|---|
 | **Project Title** | ManTarang — AI-Powered Music Emotion Recognition (MER) |
-| **Subject** | Minor Engineering Research (MER) |
+| **Subject** | Minor Engineering Research |
 | **Submitted by** | Ashutosh Kumar Singh (Enroll. No. 92301733016) |
 | | Aditya Raj (Enroll. No. 92301733062) |
 | **Live Demo** | https://huggingface.co/spaces/ashu-17/mantarang |
