@@ -1,0 +1,12 @@
+mantarang-ui/node_modules
+mantarang-ui/dist
+mantarang/__pycache__
+mantarang/**/__pycache__
+mantarang/**/*.pyc
+mantarang/logs
+mantarang/Design
+mantarang/tests
+mantarang/.flake8
+*.egg-info
+.git
+.env
