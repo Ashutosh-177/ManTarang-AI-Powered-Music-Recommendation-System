@@ -2,7 +2,7 @@
 
 ![header](https://capsule-render.vercel.app/api?type=waving&color=0:2D1B69,50:7C3AED,100:C9A227&height=220&section=header&text=ManTarang&fontSize=80&fontColor=ffffff&fontAlignY=38&desc=AI-Powered%20Music%20Emotion%20Recognition%20%26%20Recommendation&descAlignY=60&descSize=16&animation=fadeIn)
 
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=Inter&weight=700&size=20&pause=1000&color=C9A227&center=true&vCenter=true&width=650&lines=Music+Emotion+Recognition+%7C+MER+Project;Natural+Language+%E2%86%92+Ranked+Tracks+in+120ms;5-Strategy+AI+Recommendation+Engine;Explainable+Per-Track+Confidence+Metrics;Deployed+Free+on+HuggingFace+Spaces)](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Inter&weight=700&size=20&pause=1000&color=C9A227&center=true&vCenter=true&width=650&lines=Music+Emotion+Recognition+%7C+MER+Project;4-Agent+Collaborative+AI+Architecture;Planner+%E2%86%92+GenreMood+%E2%86%92+Discovery+%E2%86%92+Judge;Explainable+Per-Track+Confidence+Metrics;Deployed+Free+on+HuggingFace+Spaces)](https://git.io/typing-svg)
 
 <br/>
 
@@ -19,9 +19,9 @@
 ## 📌 Table of Contents
 
 - [About the Project](#-about-the-project)
-- [System Architecture](#-system-architecture)
-- [Recommendation Pipeline](#-recommendation-pipeline)
-- [Strategy Selection](#-strategy-selection--decision-tree)
+- [4-Agent Architecture](#-4-agent-architecture)
+- [Agent Collaboration Flow](#-agent-collaboration-flow)
+- [Agent Deep Dive](#-agent-deep-dive)
 - [Data Pipeline](#-data-pipeline)
 - [Metric Formulas](#-metric--confidence-formulas)
 - [Frontend Components](#-frontend-component-tree)
@@ -34,119 +34,161 @@
 
 ## 🎵 About the Project
 
-**ManTarang** is a **Music Emotion Recognition (MER)** system that maps free-form natural-language queries to emotionally and contextually relevant music tracks. It combines rule-based NLU, multi-criteria scoring, and a curated Spotify dataset to deliver fast, diverse, and **fully explainable** recommendations — with no GPU required.
+**ManTarang** is a **Music Emotion Recognition (MER)** system built on a **4-agent collaborative AI architecture**. When a user types a natural-language query, four specialized AI agents coordinate in a pipeline — each with a distinct role — to produce ranked, explainable music recommendations.
 
-> _"Why did you recommend this track?"_ — ManTarang tells you, with numbers.
+> Each agent contributes its expertise. The Planner leads, two specialists generate candidates, and the Judge delivers the final verdict.
 
 <div align="center">
 
-| Input | Strategy | Output |
-|-------|----------|--------|
-| `"songs like Radiohead"` | Similarity | 10 alt-rock tracks with genre DNA match |
-| `"chill lo-fi for studying"` | Genre + Context | lo-fi / chillhop, ranked by relevance |
-| `"dark indie rock"` | Genre / Mood | genre-matched, confidence scored |
-| `"energetic hip hop"` | Genre / Mood | high-popularity hip-hop tracks |
-| `"late night drives"` | Context Map | rock / pop / alternative blend |
+| Query | Planner decides | Agents activated | Output |
+|-------|----------------|-----------------|--------|
+| `"songs like Radiohead"` | Similarity strategy | Discovery + GenreMood | Genre-DNA matched tracks |
+| `"chill lo-fi for studying"` | Context strategy | GenreMood | lo-fi / chillhop ranked list |
+| `"dark indie rock"` | Genre strategy | GenreMood + Discovery | Confidence-scored results |
+| `"energetic hip hop"` | Mood strategy | GenreMood | High-energy ranked tracks |
 
 </div>
 
 ---
 
-## 🏗 System Architecture
-
-```mermaid
-graph TB
-    User["👤 User Browser"]:::user
-    React["⚛️ React + Vite SPA\nmantarang-ui"]:::frontend
-    API["🐍 FastAPI Backend\n/api/recommendations"]:::backend
-    Engine["🧠 CSV Recommender\ncsv_recommender.py"]:::engine
-    DB1["📊 track_data_final.csv\n8,778 tracks"]:::data
-    DB2["📊 spotify_data clean.csv\nGenre enrichment"]:::data
-    HF["☁️ HuggingFace Spaces\nDocker · CPU Basic · Free"]:::deploy
-
-    User -->|types query| React
-    React -->|POST /api/recommendations| API
-    API --> Engine
-    Engine -->|loads once at startup| DB1
-    Engine -->|genre enrichment| DB2
-    Engine -->|ranked recs + metrics| API
-    API -->|JSON response| React
-    React -->|renders cards + metrics| User
-    HF -->|hosts| API
-    HF -->|serves| React
-
-    classDef user fill:#2D1B69,stroke:#C9A227,color:#fff
-    classDef frontend fill:#1a1a3e,stroke:#61DAFB,color:#61DAFB
-    classDef backend fill:#1a1a3e,stroke:#009688,color:#009688
-    classDef engine fill:#1a1a3e,stroke:#C9A227,color:#C9A227
-    classDef data fill:#1a1a3e,stroke:#6ee7b7,color:#6ee7b7
-    classDef deploy fill:#2D1B69,stroke:#FFD21E,color:#FFD21E
-```
-
----
-
-## 🔄 Recommendation Pipeline
-
-```mermaid
-flowchart TD
-    Q["📝 User Query"]
-    I["🔍 Intent Detection\n_extract_artist\n_detect_genre\n_detect_mood\n_detect_context"]
-    S{"🎯 Strategy\nSelector"}
-
-    AM["🎤 Strategy 1\nArtist Match"]
-    SM["🔗 Strategy 2\nSimilarity"]
-    GM["🎼 Strategy 3\nGenre / Mood / Context"]
-    TM["📝 Strategy 4\nText Match"]
-    PF["📈 Strategy 5\nPopular Fallback"]
-
-    SC["⚖️ Score and Rank\nGenre x 0.40\nPopularity x 0.35\nDiversity x 0.15\nNoise x 0.10"]
-    MX["📊 Build Metrics\nGenre Match 0-100\nPopularity Fit 0-100\nArtist Score log-norm\nRelevance blend\nConfidence 0.0-1.0"]
-    AGG["🏆 Aggregate\navg_confidence\nsystem_confidence\ngenre_diversity"]
-    OUT["✅ JSON Response\nReact renders TrackCards\nand QualityPanel"]
-
-    Q --> I --> S
-    S -->|artist query| AM
-    S -->|like / similar to| SM
-    S -->|genre mood context| GM
-    S -->|keywords found| TM
-    S -->|no match| PF
-    AM & SM & GM & TM & PF --> SC --> MX --> AGG --> OUT
-```
-
----
-
-## 🌿 Strategy Selection — Decision Tree
+## 🤖 4-Agent Architecture
 
 ```mermaid
 graph TD
-    START["User Query"]
-    A{"Artist query?\nsongs by X\ntop songs of Y"}
-    B{"Similarity query?\nlike X\nsimilar to X"}
-    C{"Genre Mood Context?\nlo-fi, sad, coding\nworkout, party"}
-    D{"Keywords match\ntrack or artist?"}
+    USER["👤 User Query\nNatural Language Input"]
 
-    S1["Strategy 1\nArtist Match\n+10 confidence"]
-    S2["Strategy 2\nSimilarity\n+8 confidence"]
-    S3["Strategy 3\nGenre Mood\n+6 confidence"]
-    S4["Strategy 4\nText Match\n+4 confidence"]
-    S5["Strategy 5\nPopular Fallback\n+0 confidence"]
+    subgraph AGENTS["  4-Agent Collaborative System  "]
+        P["🧭 Planner Agent\n─────────────────\nOrchestrates the entire pipeline\nAnalyses query intent & complexity\nExtracts entities: artist, genre, mood\nCreates agent coordination plan\nDetermines which agents to activate"]
 
-    START --> A
-    A -->|YES| S1
-    A -->|NO| B
-    B -->|YES| S2
-    B -->|NO| C
-    C -->|YES| S3
-    C -->|NO| D
-    D -->|YES| S4
-    D -->|NO| S5
+        G["🎼 GenreMood Agent\n─────────────────\nMood detection and analysis\nGenre matching and filtering\nTag generation and enhancement\nContext-aware intent adaptation\nCandidate generation by genre/mood"]
 
-    style S1 fill:#166534,color:#fff
-    style S2 fill:#1e3a5f,color:#fff
-    style S3 fill:#4a1942,color:#fff
-    style S4 fill:#713f12,color:#fff
-    style S5 fill:#3b1515,color:#fff
+        D["🔭 Discovery Agent\n─────────────────\nMulti-hop similarity exploration\nUnderground and hidden gem detection\nSerendipitous discovery beyond mainstream\nNovelty-optimized recommendations\nArtist similarity graph traversal"]
+
+        J["⚖️ Judge Agent\n─────────────────\nCollects all agent candidates\nScores and ranks with RankingEngine\nOptimizes diversity with DiversityOptimizer\nGenerates human-readable explanations\nDelivers final ranked recommendations"]
+    end
+
+    RESULT["✅ Final Recommendations\nRanked · Scored · Explained"]
+
+    USER --> P
+    P -->|"genre/mood query"| G
+    P -->|"similarity/discovery query"| D
+    G -->|"genre candidates"| J
+    D -->|"discovery candidates"| J
+    J --> RESULT
+
+    style P fill:#2D1B69,stroke:#C9A227,color:#fff
+    style G fill:#1e3a5f,stroke:#61DAFB,color:#fff
+    style D fill:#1a3a1a,stroke:#6ee7b7,color:#fff
+    style J fill:#3b1515,stroke:#f9a8d4,color:#fff
+    style AGENTS fill:#0d0d1a,stroke:#7C3AED,color:#fff
 ```
+
+---
+
+## 🔄 Agent Collaboration Flow
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant P as 🧭 Planner Agent
+    participant G as 🎼 GenreMood Agent
+    participant D as 🔭 Discovery Agent
+    participant J as ⚖️ Judge Agent
+
+    User->>P: Natural language query
+    Note over P: Analyse intent, extract entities<br/>Determine strategy and complexity<br/>Build coordination plan
+
+    P->>G: Activate with genre/mood parameters
+    P->>D: Activate with similarity parameters
+
+    Note over G: Detect mood signals<br/>Match genre tags<br/>Generate genre candidates
+    Note over D: Explore artist similarity graph<br/>Detect underground gems<br/>Generate discovery candidates
+
+    G-->>J: Genre/Mood candidate pool
+    D-->>J: Discovery candidate pool
+
+    Note over J: Merge all candidates<br/>Score with RankingEngine<br/>Optimise diversity<br/>Generate explanations
+
+    J-->>User: Final ranked recommendations<br/>with metrics + confidence
+```
+
+---
+
+## 🧠 Agent Deep Dive
+
+### 🧭 Agent 1 — Planner Agent
+> _The orchestrator. Runs first. Decides everything else._
+
+```mermaid
+flowchart TD
+    QA["QueryAnalyzer\nParse query complexity\nDetect ambiguity\nExtract primary intent"]
+    CA["ContextAnalyzer\nInterpret context signals\nHandle effective intent overrides\nTransform raw context"]
+    EP["EntityProcessor\nExtract: artist name\nExtract: genre keywords\nExtract: mood signals\nExtract: context triggers"]
+    SP["StrategyPlanner\nSelect recommendation strategy\nDecide agent activation order\nSet parameters per agent\nBuild coordination plan"]
+
+    QA --> CA --> EP --> SP
+```
+
+**Outputs to:** GenreMood Agent + Discovery Agent with a structured coordination plan.
+
+---
+
+### 🎼 Agent 2 — GenreMood Agent
+> _The emotion specialist. Translates feelings into music._
+
+```mermaid
+flowchart TD
+    MA["MoodAnalyzer\nDetect mood from query\nhappy / sad / energetic\nchill / romantic / focused"]
+    GP["GenreProcessor\nMatch genre tags\nExpand via alias maps\nFilter by genre overlap"]
+    TG["TagGenerator\nGenerate enhanced tags\nCombine genre + mood signals\nContext-aware tag boost"]
+    UCG["UnifiedCandidateGenerator\nGenerate candidates\nby genre and mood\nfrom dataset"]
+    QS["QualityScorer\nScore genre fit\nScore mood alignment\nScore popularity balance"]
+
+    MA --> TG
+    GP --> TG
+    TG --> UCG --> QS
+```
+
+**Outputs to:** Judge Agent with a pool of genre/mood-matched track candidates.
+
+---
+
+### 🔭 Agent 3 — Discovery Agent
+> _The explorer. Finds what you didn't know you needed._
+
+```mermaid
+flowchart TD
+    DC["DiscoveryConfig\nSet novelty parameters\nConfigure similarity depth\nSet underground threshold"]
+    SE["SimilarityExplorer\nMulti-hop artist graph\nExplore genre neighbours\nFind sonic relatives"]
+    UD["UndergroundDetector\nDetect hidden gems\nScore novelty vs popularity\nFind non-mainstream tracks"]
+    DF["DiscoveryFilter\nFilter irrelevant candidates\nRemove duplicates\nApply quality threshold"]
+    DD["DiscoveryDiversity\nManage variety\nPrevent artist clustering\nBalance mainstream vs niche"]
+
+    DC --> SE
+    DC --> UD
+    SE --> DF
+    UD --> DF
+    DF --> DD
+```
+
+**Outputs to:** Judge Agent with a pool of discovery/similarity candidates.
+
+---
+
+### ⚖️ Agent 4 — Judge Agent
+> _The final decision maker. Ranks, diversifies, and explains._
+
+```mermaid
+flowchart TD
+    CS["CandidateSelector\nCollect all agent pools\nFilter by quality threshold\nRemove duplicates"]
+    RE["RankingEngine\nMulti-criteria scoring\nGenre match weight\nPopularity fit weight\nArtist credibility weight"]
+    DO["DiversityOptimizer\nPrevent artist repetition\nBalance genre spread\nOptimize result variety"]
+    EG["ExplanationGenerator\nGenerate per-track reasons\nCalculate confidence score\nBuild human-readable text"]
+
+    CS --> RE --> DO --> EG
+```
+
+**Outputs:** Final `N` ranked recommendations with metrics, confidence, and explanations.
 
 ---
 
@@ -154,14 +196,14 @@ graph TD
 
 ```mermaid
 flowchart LR
-    CSV1["📄 track_data_final.csv\n8778 rows\ntrack + artist + genres\npopularity + followers"]
+    CSV1["📄 track_data_final.csv\n8,778 tracks\ntrack + artist + genres\npopularity + followers"]
     CSV2["📄 spotify_data clean.csv\nGenre enrichment source"]
 
-    PARSE["🔧 Parse Genres\nast.literal_eval\nfallback string split"]
-    MERGE["🔀 Build Artist-Genre Map\nMerge both CSVs\n61% coverage\nwas 49% before merge"]
-    ENRICH["✨ Enrich Missing Genres\nBack-fill from merged map"]
-    INDEX["🗂 Add Index Columns\nartist_lower\ntrack_lower\ngenres_lower"]
-    RAM["🧠 Singleton DataFrame\nLoaded once at startup\nLives in RAM\n50ms query time"]
+    PARSE["Parse Genres\nast.literal_eval\nfallback string split"]
+    MERGE["Build Artist-Genre Map\nMerge both sources\n61% genre coverage"]
+    ENRICH["Enrich Missing Genres\nBack-fill from merged map"]
+    INDEX["Index Columns\nartist_lower\ntrack_lower\ngenres_lower"]
+    RAM["Singleton DataFrame\nLoaded once at startup\nShared across all agents"]
 
     CSV1 --> PARSE
     CSV2 --> PARSE
@@ -193,24 +235,16 @@ graph LR
 
 <div align="center">
 
-| Metric | Formula | Display |
-|--------|---------|---------|
-| Genre Match | `genre_overlap(track, target) × 100` | Animated bar |
-| Popularity Fit | `popularity / 100 × 100` | Animated bar |
-| Artist Score | `min(100, log₁₀(followers)/8 × 100)` | Animated bar |
-| Overall Relevance | `GM×0.45 + PF×0.30 + AS×0.25` | Animated bar |
-| Track Confidence | `(GM×0.50 + AS×0.30 + PF×0.20) / 100` | SVG ring |
-| System Confidence | `avg×75 + strategy_premium + diversity_bonus` | Quality panel |
+| Metric | Formula | Calculated By |
+|--------|---------|--------------|
+| Genre Match | `genre_overlap(track, target) × 100` | GenreMood + Discovery |
+| Popularity Fit | `popularity / 100 × 100` | Judge Agent |
+| Artist Score | `min(100, log₁₀(followers)/8 × 100)` | Judge Agent |
+| Overall Relevance | `GM×0.45 + PF×0.30 + AS×0.25` | Judge Agent |
+| Track Confidence | `(GM×0.50 + AS×0.30 + PF×0.20) / 100` | Judge Agent |
+| System Confidence | `avg×75 + strategy_premium + diversity_bonus` | Judge Agent |
 
 </div>
-
-```
-System_Confidence = min(100,
-    avg_track_confidence × 100 × 0.75
-    + Strategy_Premium   ← artist=10, similarity=8, genre=6, text=4, fallback=0
-    + Diversity_Bonus    ← min(10, unique_genre_count)
-)
-```
 
 ---
 
@@ -246,8 +280,9 @@ graph TD
 
 | Layer | Technology | Purpose |
 |-------|-----------|---------|
-| 🐍 Backend | Python 3.11 + FastAPI | REST API, routing, lifespan |
-| 📊 Data | Pandas + CSV | 8,778-track in-memory dataset |
+| 🤖 Agents | Python 3.11 — 4 agent classes | Planner, GenreMood, Discovery, Judge |
+| 🐍 Backend | FastAPI + Uvicorn | REST API, routing, lifespan |
+| 📊 Data | Pandas + Spotify CSV | 8,778-track shared agent dataset |
 | ⚛️ Frontend | React 18 + Vite | SPA, hot reload, /api proxy |
 | 🎞 Animation | Framer Motion | Transitions, AnimatePresence |
 | 🌌 Canvas | HTML5 Canvas API | 200-star animated starfield |
@@ -282,28 +317,44 @@ npm run dev
 
 ```
 ManTarang/
-├── mantarang/                       ← Python backend
-│   └── src/
-│       ├── api/backend.py           ← FastAPI routes + SPA fallback
-│       └── services/
-│           └── csv_recommender.py   ← 5-strategy recommendation engine
+├── mantarang/src/
+│   ├── agents/
+│   │   ├── planner/           ← Agent 1: Orchestrates pipeline
+│   │   │   ├── agent.py
+│   │   │   ├── query_analyzer.py
+│   │   │   ├── context_analyzer.py
+│   │   │   ├── strategy_planner.py
+│   │   │   └── entity_processor.py
+│   │   ├── genre_mood/        ← Agent 2: Emotion & genre specialist
+│   │   │   ├── agent.py
+│   │   │   └── components/
+│   │   ├── discovery/         ← Agent 3: Similarity & novelty explorer
+│   │   │   ├── agent.py
+│   │   │   ├── similarity_explorer.py
+│   │   │   └── underground_detector.py
+│   │   └── judge/             ← Agent 4: Ranks & explains results
+│   │       ├── agent.py
+│   │       └── components/
+│   │           ├── ranking_engine.py
+│   │           ├── diversity_optimizer.py
+│   │           └── explanation_generator.py
+│   └── api/
+│       └── backend.py         ← FastAPI routes
 │
-├── mantarang-ui/                    ← React frontend
-│   └── src/
-│       ├── App.jsx                  ← Search, results, quality panel
-│       └── components/
-│           ├── HeroTitle.jsx        ← Letter animation on hover
-│           ├── TrackCard.jsx        ← Result card with details toggle
-│           ├── MetricsBar.jsx       ← Confidence ring + 4 bars
-│           ├── SkeletonCard.jsx     ← Domino-wave loading state
-│           ├── Stars.jsx            ← Canvas animated starfield
-│           └── GlowCard.jsx         ← Mouse spotlight effect
+├── mantarang-ui/src/
+│   ├── App.jsx
+│   └── components/
+│       ├── HeroTitle.jsx
+│       ├── TrackCard.jsx
+│       ├── MetricsBar.jsx
+│       ├── SkeletonCard.jsx
+│       ├── Stars.jsx
+│       └── GlowCard.jsx
 │
-├── track_data_final.csv             ← Primary dataset (8,778 tracks)
-├── spotify_data clean.csv           ← Genre enrichment
-├── Dockerfile                       ← Multi-stage: Node then Python
-├── METRICS.md                       ← Full formula reference
-└── PROJECT_REPORT.md                ← MER project report
+├── track_data_final.csv        ← Shared agent dataset (8,778 tracks)
+├── Dockerfile
+├── METRICS.md
+└── PROJECT_REPORT.md
 ```
 
 ---
