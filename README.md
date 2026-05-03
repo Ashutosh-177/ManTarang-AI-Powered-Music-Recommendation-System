@@ -1,6 +1,6 @@
-﻿<div align="center">
+﻿![ManTarang Banner](https://capsule-render.vercel.app/api?type=waving&color=0:2D1B69,50:7C3AED,100:C9A227&height=220&section=header&text=ManTarang&fontSize=80&fontColor=ffffff&fontAlignY=38&desc=AI-Powered%20Music%20Emotion%20Recognition%20%26%20Recommendation&descAlignY=60&descSize=16&animation=fadeIn)
 
-![header](https://capsule-render.vercel.app/api?type=waving&color=0:2D1B69,50:7C3AED,100:C9A227&height=220&section=header&text=ManTarang&fontSize=80&fontColor=ffffff&fontAlignY=38&desc=AI-Powered%20Music%20Emotion%20Recognition%20%26%20Recommendation&descAlignY=60&descSize=16&animation=fadeIn)
+<div align="center">
 
 [![Typing SVG](https://readme-typing-svg.demolab.com?font=Inter&weight=700&size=20&pause=1000&color=C9A227&center=true&vCenter=true&width=650&lines=Music+Emotion+Recognition+%7C+MER+Project;4-Agent+Collaborative+AI+Architecture;Planner+%E2%86%92+GenreMood+%E2%86%92+Discovery+%E2%86%92+Judge;Explainable+Per-Track+Confidence+Metrics;Deployed+Free+on+HuggingFace+Spaces)](https://git.io/typing-svg)
 
@@ -58,7 +58,7 @@ graph TD
     USER["👤 User Query\nNatural Language Input"]
 
     subgraph AGENTS["  4-Agent Collaborative System  "]
-        P["🧭 Planner Agent\n─────────────────\nOrchestrates the entire pipeline\nAnalyses query intent & complexity\nExtracts entities: artist, genre, mood\nCreates agent coordination plan\nDetermines which agents to activate"]
+        P["🧭 Planner Agent\n─────────────────\nOrchestrates the entire pipeline\nAnalyses query intent and complexity\nExtracts entities: artist, genre, mood\nCreates agent coordination plan\nDetermines which agents to activate"]
 
         G["🎼 GenreMood Agent\n─────────────────\nMood detection and analysis\nGenre matching and filtering\nTag generation and enhancement\nContext-aware intent adaptation\nCandidate generation by genre/mood"]
 
@@ -70,10 +70,10 @@ graph TD
     RESULT["✅ Final Recommendations\nRanked · Scored · Explained"]
 
     USER --> P
-    P -->|"genre/mood query"| G
-    P -->|"similarity/discovery query"| D
-    G -->|"genre candidates"| J
-    D -->|"discovery candidates"| J
+    P -->|genre/mood query| G
+    P -->|similarity/discovery query| D
+    G -->|genre candidates| J
+    D -->|discovery candidates| J
     J --> RESULT
 
     style P fill:#2D1B69,stroke:#C9A227,color:#fff
@@ -188,7 +188,7 @@ flowchart TD
     CS --> RE --> DO --> EG
 ```
 
-**Outputs:** Final `N` ranked recommendations with metrics, confidence, and explanations.
+**Outputs:** Final ranked recommendations with metrics, confidence, and explanations.
 
 ---
 
@@ -202,8 +202,8 @@ flowchart LR
     PARSE["Parse Genres\nast.literal_eval\nfallback string split"]
     MERGE["Build Artist-Genre Map\nMerge both sources\n61% genre coverage"]
     ENRICH["Enrich Missing Genres\nBack-fill from merged map"]
-    INDEX["Index Columns\nartist_lower\ntrack_lower\ngenres_lower"]
-    RAM["Singleton DataFrame\nLoaded once at startup\nShared across all agents"]
+    INDEX["Index Columns\nartist_lower / track_lower\ngenres_lower"]
+    RAM["Shared Agent Dataset\nLoaded once at startup\nShared across all agents"]
 
     CSV1 --> PARSE
     CSV2 --> PARSE
@@ -237,7 +237,7 @@ graph LR
 
 | Metric | Formula | Calculated By |
 |--------|---------|--------------|
-| Genre Match | `genre_overlap(track, target) × 100` | GenreMood + Discovery |
+| Genre Match | `genre_overlap(track, target) × 100` | GenreMood + Discovery Agents |
 | Popularity Fit | `popularity / 100 × 100` | Judge Agent |
 | Artist Score | `min(100, log₁₀(followers)/8 × 100)` | Judge Agent |
 | Overall Relevance | `GM×0.45 + PF×0.30 + AS×0.25` | Judge Agent |
@@ -253,13 +253,11 @@ graph LR
 ```mermaid
 graph TD
     APP["App.jsx\nSearch · Results · State"]
-
     STARS["Stars.jsx\n200 canvas stars\ndrift + twinkle"]
     HERO["HeroTitle.jsx\nLetter hover animation\nColor wave + music notes"]
     SKEL["SkeletonCard x5\nDomino wave loading\n--wave-delay CSS var"]
     QP["QualityPanel\nSystem confidence\nCollapsible metric bars"]
     TC["TrackCard x N\nRank · Title · Artist\nGenre chips · Links"]
-
     GC["GlowCard\nMouse spotlight\n--gx --gy CSS vars"]
     MB["MetricsBar\nSVG confidence ring\n4 animated progress bars"]
 
@@ -325,14 +323,14 @@ ManTarang/
 │   │   │   ├── context_analyzer.py
 │   │   │   ├── strategy_planner.py
 │   │   │   └── entity_processor.py
-│   │   ├── genre_mood/        ← Agent 2: Emotion & genre specialist
+│   │   ├── genre_mood/        ← Agent 2: Emotion and genre specialist
 │   │   │   ├── agent.py
 │   │   │   └── components/
-│   │   ├── discovery/         ← Agent 3: Similarity & novelty explorer
+│   │   ├── discovery/         ← Agent 3: Similarity and novelty explorer
 │   │   │   ├── agent.py
 │   │   │   ├── similarity_explorer.py
 │   │   │   └── underground_detector.py
-│   │   └── judge/             ← Agent 4: Ranks & explains results
+│   │   └── judge/             ← Agent 4: Ranks and explains results
 │   │       ├── agent.py
 │   │       └── components/
 │   │           ├── ranking_engine.py
@@ -380,8 +378,6 @@ ManTarang/
 
 **Music Emotion Recognition (MER) — 2026**
 
-<br/>
+</div>
 
 ![footer](https://capsule-render.vercel.app/api?type=waving&color=0:C9A227,50:7C3AED,100:2D1B69&height=120&section=footer&animation=fadeIn)
-
-</div>
