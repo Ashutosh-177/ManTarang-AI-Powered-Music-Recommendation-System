@@ -1,17 +1,6 @@
-﻿---
-title: ManTarang
-emoji: 🎵
-colorFrom: blue
-colorTo: purple
-sdk: docker
-pinned: false
----
+﻿<div align="center">
 
-<div align="center">
-
-<img src="https://capsule-render.vercel.app/api?type=waving&amp;color=0:2D1B69,50:7C3AED,100:C9A227&amp;height=220&amp;section=header&amp;text=ManTarang&amp;fontSize=80&amp;fontColor=ffffff&amp;fontAlignY=38&amp;desc=AI-Powered%20Music%20Emotion%20Recognition%20%26%20Recommendation&amp;descAlignY=60&amp;descSize=16&amp;animation=fadeIn" width="100%"/>
-
-<br/>
+![header](https://capsule-render.vercel.app/api?type=waving&color=0:2D1B69,50:7C3AED,100:C9A227&height=220&section=header&text=ManTarang&fontSize=80&fontColor=ffffff&fontAlignY=38&desc=AI-Powered%20Music%20Emotion%20Recognition%20%26%20Recommendation&descAlignY=60&descSize=16&animation=fadeIn)
 
 [![Typing SVG](https://readme-typing-svg.demolab.com?font=Inter&weight=700&size=20&pause=1000&color=C9A227&center=true&vCenter=true&width=650&lines=Music+Emotion+Recognition+%7C+MER+Project;Natural+Language+%E2%86%92+Ranked+Tracks+in+120ms;5-Strategy+AI+Recommendation+Engine;Explainable+Per-Track+Confidence+Metrics;Deployed+Free+on+HuggingFace+Spaces)](https://git.io/typing-svg)
 
@@ -188,9 +177,9 @@ flowchart LR
 
 ```mermaid
 graph LR
-    GM["Genre Match\nJaccard overlap\nx 100\nWeight 45%"]
-    PF["Popularity Fit\ntrack_popularity\ndivided by 100\nWeight 30%"]
-    AS["Artist Score\nlog10 followers\ndivided by 8 x 100\nWeight 25%"]
+    GM["Genre Match\nJaccard overlap x 100\nWeight 45%"]
+    PF["Popularity Fit\ntrack_popularity / 100\nWeight 30%"]
+    AS["Artist Score\nlog10 followers / 8 x 100\nWeight 25%"]
     RV["Overall Relevance\nGM x 0.45\nPF x 0.30\nAS x 0.25"]
     CF["Track Confidence\nGM x 0.50\nAS x 0.30\nPF x 0.20\ndivided by 100"]
 
@@ -215,7 +204,6 @@ graph LR
 
 </div>
 
-**System Confidence Formula:**
 ```
 System_Confidence = min(100,
     avg_track_confidence × 100 × 0.75
@@ -263,7 +251,7 @@ graph TD
 | ⚛️ Frontend | React 18 + Vite | SPA, hot reload, /api proxy |
 | 🎞 Animation | Framer Motion | Transitions, AnimatePresence |
 | 🌌 Canvas | HTML5 Canvas API | 200-star animated starfield |
-| 🐳 Container | Docker multi-stage | Node build → Python serve |
+| 🐳 Container | Docker multi-stage | Node build then Python serve |
 | ☁️ Deploy | HuggingFace Spaces | CPU Basic, free, port 7860 |
 
 </div>
@@ -343,6 +331,6 @@ ManTarang/
 
 <br/>
 
-<img src="https://capsule-render.vercel.app/api?type=waving&amp;color=0:C9A227,50:7C3AED,100:2D1B69&amp;height=120&amp;section=footer&amp;animation=fadeIn" width="100%"/>
+![footer](https://capsule-render.vercel.app/api?type=waving&color=0:C9A227,50:7C3AED,100:2D1B69&height=120&section=footer&animation=fadeIn)
 
 </div>
