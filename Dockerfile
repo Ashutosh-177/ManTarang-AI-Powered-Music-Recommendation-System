@@ -20,6 +20,7 @@ COPY mantarang/ ./mantarang/
 # Copy data files
 COPY track_data_final.csv ./
 COPY ["spotify_data clean.csv", "./"]
+COPY MD-1M.csv ./
 
 # Copy React build output
 COPY --from=frontend /frontend/dist ./dist
