@@ -4,8 +4,6 @@ import HeroTitle from "./components/HeroTitle";
 import TrackCard from "./components/TrackCard";
 import SkeletonCard from "./components/SkeletonCard";
 import Stars from "./components/Stars";
-import AuthButton from "./components/AuthButton";
-import { useAuth } from "./context/AuthContext";
 import blackhole from "./assets/blackhole.png";
 
 const EXAMPLES = [
@@ -121,7 +119,6 @@ function QualityPanel({ metrics }) {
 
 /* ── App ─────────────────────────────────────────────────── */
 export default function App() {
-  const { user } = useAuth();
   const [query,     setQuery]     = useState("");
   const [results,   setResults]   = useState(null);
   const [aggregate, setAggregate] = useState(null);
@@ -183,13 +180,6 @@ export default function App() {
         backgroundPosition: "center center",
         backgroundRepeat: "no-repeat",
       }} />
-
-      {/* ── Auth bar ───────────────────────────────────────── */}
-      <div style={{
-        position: "fixed", top: 16, right: 20, zIndex: 100,
-      }}>
-        <AuthButton />
-      </div>
 
       {/* ── Moving stars layer ─────────────────────────────── */}
       <Stars />
@@ -256,9 +246,7 @@ export default function App() {
                   textShadow: "0 0 20px rgba(0,0,0,1), 0 2px 8px rgba(0,0,0,1)",
                 }}
               >
-                {user
-                  ? `Welcome back, ${user.displayName?.split(" ")[0]}. Describe what you want to hear.`
-                  : "Describe what you want to hear — moods, genres, or any vibe."}
+                Describe what you want to hear — moods, genres, or any vibe.
               </motion.p>
             </motion.div>
           )}
